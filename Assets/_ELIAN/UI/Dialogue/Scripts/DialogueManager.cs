@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -28,10 +29,15 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TMP_Text speakerNameText;
     [SerializeField] private Image portraitImage;
 
-    [Header("Retratos")]
-    [SerializeField] private Sprite elianPortrait;
-    [SerializeField] private Sprite sophiaPortrait;
-    [SerializeField] private Sprite ecoPortrait;
+    [Header("Retratos animados")]
+    [Tooltip("Frames del retrato de Elian, en orden.")]
+    [SerializeField] private Sprite[] elianPortraitFrames;
+    [Tooltip("Frames del retrato de Eco, en orden.")]
+    [SerializeField] private Sprite[] ecoPortraitFrames;
+    [Tooltip("Frames del retrato de Sophia, en orden.")]
+    [SerializeField] private Sprite[] sophiaPortraitFrames;
+    [Tooltip("Cuadros por segundo de la animación de retrato (aplica a los tres).")]
+    [SerializeField] private float portraitFrameRate = 8f;
 
     private DialogueLine[] currentLines;
     private int currentLine;
@@ -42,6 +48,8 @@ public class DialogueManager : MonoBehaviour
     private PlayerController playerController;
     private Rigidbody2D playerRb;
     private Animator playerAnimator;
+
+    private Coroutine portraitAnimCoroutine;
 
     private void Start()
     {
@@ -120,33 +128,68 @@ public class DialogueManager : MonoBehaviour
     private void UpdateSpeaker(Speaker speaker)
     {
         string speakerName = "";
-        Sprite portrait = null;
+        Sprite[] frames = null;
 
         switch (speaker)
         {
             case Speaker.Eco:
                 speakerName = "ECO ESTUDIANTE";
-                portrait = ecoPortrait;
+                frames = ecoPortraitFrames;
                 break;
 
             case Speaker.Elian:
                 speakerName = "ELIAN";
-                portrait = elianPortrait;
+                frames = elianPortraitFrames;
                 break;
 
             case Speaker.Sophia:
                 speakerName = "SOPHIA";
-                portrait = sophiaPortrait;
+                frames = sophiaPortraitFrames;
                 break;
         }
 
         if (speakerNameText != null)
             speakerNameText.text = speakerName;
 
-        if (portraitImage != null)
+        // Frenamos cualquier animación de retrato previa antes de arrancar la nueva.
+        StopPortraitAnimation();
+
+        if (portraitImage == null)
+            return;
+
+        if (frames != null && frames.Length > 0)
         {
-            portraitImage.sprite = portrait;
-            portraitImage.gameObject.SetActive(portrait != null);
+            portraitImage.gameObject.SetActive(true);
+            portraitAnimCoroutine = StartCoroutine(AnimatePortrait(frames));
+        }
+        else
+        {
+            // No hay frames asignados para este hablante: no mostramos nada
+            // en vez de arriesgarnos a mostrar un sprite viejo/incorrecto.
+            portraitImage.gameObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator AnimatePortrait(Sprite[] frames)
+    {
+        int frameIndex = 0;
+        float frameDuration = 1f / Mathf.Max(portraitFrameRate, 0.01f);
+
+        while (true)
+        {
+            portraitImage.sprite = frames[frameIndex];
+            frameIndex = (frameIndex + 1) % frames.Length;
+
+            yield return new WaitForSeconds(frameDuration);
+        }
+    }
+
+    private void StopPortraitAnimation()
+    {
+        if (portraitAnimCoroutine != null)
+        {
+            StopCoroutine(portraitAnimCoroutine);
+            portraitAnimCoroutine = null;
         }
     }
 
@@ -166,6 +209,8 @@ public class DialogueManager : MonoBehaviour
     private void EndDialogue()
     {
         dialogueActive = false;
+
+        StopPortraitAnimation();
 
         if (dialoguePanel != null)
             dialoguePanel.SetActive(false);

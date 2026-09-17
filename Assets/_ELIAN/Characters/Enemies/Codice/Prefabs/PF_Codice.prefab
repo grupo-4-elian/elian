@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2433378276343795233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7090924555184220919}
+  m_Layer: 7
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7090924555184220919
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2433378276343795233}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.15, y: -1.21, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 133419686915653387}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5368248653801552952
 GameObject:
   m_ObjectHideFlags: 0
@@ -14,9 +45,9 @@ GameObject:
   - component: {fileID: 6028226873899078393}
   - component: {fileID: 8013804163300091752}
   - component: {fileID: 2334619527230728276}
-  - component: {fileID: 1826466411523449192}
   - component: {fileID: -7861534723287373386}
   - component: {fileID: -2898657248362133633}
+  - component: {fileID: 7407936941285025286}
   m_Layer: 7
   m_Name: PF_Codice
   m_TagString: Untagged
@@ -36,7 +67,8 @@ Transform:
   m_LocalPosition: {x: 4, y: -1, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7090924555184220919}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2314971547740072155
@@ -206,25 +238,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &1826466411523449192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5368248653801552952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8427cfd3b0fc80e4a9c4d436deed0c79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyController
-  detectionRange: 8
-  attackRange: 2.5
-  moveSpeed: 2.5
-  isFlying: 1
-  attackCooldown: 1.5
-  attackDamage: 1
-  attackCenterOffset: {x: 0.2, y: -1}
 --- !u!114 &-7861534723287373386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,3 +263,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c4a6c0aebd23254383f4dcfa70b3967, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CodiceHurt
+--- !u!114 &7407936941285025286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5368248653801552952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a9a73bc7cf8cd34195f6806f60dd06a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CodiceController
+  detectionRange: 8
+  shootRange: 5
+  moveSpeed: 2.5
+  isFlying: 1
+  shootCooldown: 1.5
+  firePoint: {fileID: 7090924555184220919}
+  bulletPrefab: {fileID: 4011566625022297198, guid: 6073b732a250fc54aa1b0090efbf5fbb, type: 3}

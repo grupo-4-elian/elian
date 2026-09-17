@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6904058168209865971}
   - component: {fileID: 3662974876784008637}
   - component: {fileID: 7045974725511906176}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: EnemyBullet_Codice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -81,7 +81,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 35
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 5823c7de4c4e7734c8f8e3fc844e87d1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -141,6 +141,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7689a21b091206c4ca5c0138acad0cfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBullet
-  speed: 15
+  speed: 6
   lifeTime: 3
   damage: 1
