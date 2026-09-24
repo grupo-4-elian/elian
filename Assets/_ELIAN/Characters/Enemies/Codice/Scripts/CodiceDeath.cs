@@ -29,7 +29,7 @@ public class CodiceDeath : MonoBehaviour
     {
         animator.ResetTrigger("Hurt");
         animator.SetTrigger("Die");
-        Sfx.Play(Sfx.Explosion);
+        Sfx.PlayDeathFallback(this, Sfx.Explosion);
 
         CodiceHurt ch = GetComponent<CodiceHurt>();
         if (ch != null)

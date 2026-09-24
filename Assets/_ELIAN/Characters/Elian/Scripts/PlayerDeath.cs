@@ -57,7 +57,7 @@ public class PlayerDeath : MonoBehaviour
         // Restamos la vida apenas muere (no despues del delay), asi el
         // HUD se actualiza al instante aunque el reinicio tarde un poco.
         bool hasLivesLeft = LivesManager.LoseLife();
-        Sfx.Play(Sfx.Muerte);
+        Sfx.PlayDeathFallback(this, Sfx.Muerte);
 
         if (hasLivesLeft)
         {

@@ -581,7 +581,7 @@ public class SophiaController : MonoBehaviour
                 rotation
             );
 
-        if (characterAudio != null)
+        if (characterAudio != null && characterAudio.HasShootSound)
             characterAudio.PlayShoot();
         else
             Sfx.Play(Sfx.DisparoEnemigo, 0.8f);

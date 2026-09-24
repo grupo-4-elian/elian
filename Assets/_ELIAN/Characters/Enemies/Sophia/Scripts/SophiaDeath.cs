@@ -42,7 +42,7 @@ public class SophiaDeath : MonoBehaviour
         if (SophiaHurt.HasParameter(animator, "Die"))
             animator.SetTrigger("Die");
 
-        Sfx.Play(Sfx.ExplosionJefe);
+        Sfx.PlayDeathFallback(this, Sfx.ExplosionJefe);
 
         SophiaHurt sh = GetComponent<SophiaHurt>();
         if (sh != null)

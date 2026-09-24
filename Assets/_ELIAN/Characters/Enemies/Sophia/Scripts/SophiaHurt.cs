@@ -33,7 +33,7 @@ public class SophiaHurt : MonoBehaviour
         if (HasParameter(animator, "Hurt"))
             animator.SetTrigger("Hurt");
 
-        Sfx.Play(Sfx.GolpeEnemigo);
+        Sfx.PlayHurtFallback(this, Sfx.GolpeEnemigo);
     }
 
     public static bool HasParameter(Animator anim, string paramName)
