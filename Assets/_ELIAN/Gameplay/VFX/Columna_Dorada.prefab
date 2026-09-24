@@ -229,7 +229,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.6, y: 2.8}
+  m_Size: {x: 1.1, y: 2.8}
   m_EdgeRadius: 0
 --- !u!114 &5947358263100678068
 MonoBehaviour:
@@ -244,6 +244,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ColumnHazard
   warningSprite: {fileID: 8634630831775821971}
-  telegraphDuration: 0.8
+  telegraphDuration: 1.2
   activeDuration: 0.4
   damage: 1

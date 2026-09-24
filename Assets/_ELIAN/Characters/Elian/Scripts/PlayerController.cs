@@ -20,6 +20,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform firePointUp;
     [SerializeField] private Transform firePointCrouch;
 
+    [Header("Recibir el error")]
+    [Tooltip("Tiempo que Elian debe permanecer quieto antes de poder recibir un error sin daño.")]
+    [SerializeField] private float acceptErrorDelay = 0.35f;
+
+    [Tooltip("Tolerancia mínima de movimiento para considerarlo realmente quieto.")]
+    [SerializeField] private float stillVelocityTolerance = 0.1f;
+
     private Rigidbody2D rb;
     private Animator animator;
     private PlayerControls controls;
@@ -32,6 +39,10 @@ public class PlayerController : MonoBehaviour
     private bool facingRight = true;
 
     private bool jumpRequested = false;
+
+    private float stillTimer = 0f;
+
+    public bool IsAcceptingError { get; private set; }
 
     private void Awake()
     {
@@ -48,11 +59,13 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         controls.Player.Disable();
+
+        stillTimer = 0f;
+        IsAcceptingError = false;
     }
 
     private void Update()
     {
-        // El input se lee cada frame para que responda inmediatamente.
         moveInput = controls.Player.Move.ReadValue<Vector2>();
 
         isGrounded = Physics2D.OverlapCircle(
@@ -63,6 +76,8 @@ public class PlayerController : MonoBehaviour
 
         isCrouching = moveInput.y < 0f && isGrounded;
         isAimingUp = moveInput.y > 0f;
+
+        UpdateErrorAcceptance();
 
         float horizontal = isCrouching ? 0f : moveInput.x;
 
@@ -76,13 +91,11 @@ public class PlayerController : MonoBehaviour
         else if (horizontal < -0.01f && facingRight)
             Flip();
 
-        // Registramos el salto inmediatamente.
         if (controls.Player.Jump.WasPressedThisFrame() && isGrounded)
         {
             jumpRequested = true;
         }
 
-        // El disparo no necesita esperar al ciclo de fisica.
         if (controls.Player.Fire.WasPressedThisFrame())
         {
             Shoot();
@@ -107,6 +120,37 @@ public class PlayerController : MonoBehaviour
             horizontal * moveSpeed,
             rb.linearVelocity.y
         );
+    }
+
+    private void UpdateErrorAcceptance()
+    {
+        bool noHorizontalInput =
+            Mathf.Abs(moveInput.x) < 0.01f;
+
+        bool almostNoHorizontalMovement =
+            Mathf.Abs(rb.linearVelocity.x) <= stillVelocityTolerance;
+
+        bool almostNoVerticalMovement =
+            Mathf.Abs(rb.linearVelocity.y) <= stillVelocityTolerance;
+
+        bool completelyStill =
+            isGrounded &&
+            noHorizontalInput &&
+            almostNoHorizontalMovement &&
+            almostNoVerticalMovement;
+
+        if (completelyStill)
+        {
+            stillTimer += Time.deltaTime;
+
+            if (stillTimer >= acceptErrorDelay)
+                IsAcceptingError = true;
+        }
+        else
+        {
+            stillTimer = 0f;
+            IsAcceptingError = false;
+        }
     }
 
     private void Shoot()
