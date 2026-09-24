@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -20,6 +20,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform firePointUp;
     [SerializeField] private Transform firePointCrouch;
 
+    [Header("Recibir el error")]
+    [Tooltip("Tiempo que Elian debe permanecer quieto antes de poder recibir un error sin daño.")]
+    [SerializeField] private float acceptErrorDelay = 0.35f;
+
+    [Tooltip("Tolerancia mínima de movimiento para considerarlo realmente quieto.")]
+    [SerializeField] private float stillVelocityTolerance = 0.1f;
+
     [Header("Arrastrarse (tuneles de techo bajo)")]
     [Tooltip("Velocidad al avanzar agachado dentro de un tunel (CrawlZone).")]
     [SerializeField] private float crawlSpeed = 3f;
@@ -29,31 +36,39 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private PlayerControls controls;
+    private CharacterAudio characterAudio;
     private BoxCollider2D bodyCollider;
     private Vector2 standingColliderSize;
     private Vector2 standingColliderOffset;
 
-    // Cantidad de CrawlZone en las que esta el jugador (pueden solaparse).
-    private int crawlZones;
-
-    // Dentro de un tunel Elian queda agachado: solo avanza o retrocede,
-    // puede disparar, pero no puede saltar ni ponerse de pie.
-    public bool IsCrawling => crawlZones > 0;
-
     private Vector2 moveInput = Vector2.zero;
 
     private bool isGrounded = false;
+    private bool wasGrounded = false;
+    private bool groundStateInitialized = false;
     private bool isCrouching = false;
     private bool isAimingUp = false;
     private bool facingRight = true;
 
     private bool jumpRequested = false;
 
+    private float stillTimer = 0f;
+
+    // Cantidad de CrawlZone en las que esta el jugador (pueden solaparse).
+    private int crawlZones;
+
+    public bool IsAcceptingError { get; private set; }
+
+    // Dentro de un tunel Elian queda agachado: solo avanza o retrocede,
+    // puede disparar, pero no puede saltar ni ponerse de pie.
+    public bool IsCrawling => crawlZones > 0;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         controls = new PlayerControls();
+        characterAudio = GetComponent<CharacterAudio>();
 
         bodyCollider = GetComponent<BoxCollider2D>();
         if (bodyCollider != null)
@@ -106,6 +121,9 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         controls?.Player.Disable();
+
+        stillTimer = 0f;
+        IsAcceptingError = false;
     }
 
     // Si Unity recompila scripts durante Play Mode, recarga el codigo sin
@@ -129,7 +147,6 @@ public class PlayerController : MonoBehaviour
         if (PauseMenu.IsPaused)
             return;
 
-        // El input se lee cada frame para que responda inmediatamente.
         moveInput = controls.Player.Move.ReadValue<Vector2>();
 
         isGrounded = Physics2D.OverlapCircle(
@@ -138,9 +155,29 @@ public class PlayerController : MonoBehaviour
             groundLayer
         );
 
+        if (!groundStateInitialized)
+        {
+            wasGrounded = isGrounded;
+            groundStateInitialized = true;
+        }
+        else
+        {
+            if (isGrounded &&
+                !wasGrounded &&
+                rb.linearVelocity.y <= 0.1f &&
+                characterAudio != null)
+            {
+                characterAudio.PlayLand();
+            }
+
+            wasGrounded = isGrounded;
+        }
+
         // En un tunel se va siempre agachado y no se puede apuntar arriba.
         isCrouching = IsCrawling || (moveInput.y < 0f && isGrounded);
         isAimingUp = !IsCrawling && moveInput.y > 0f;
+
+        UpdateErrorAcceptance();
 
         float horizontal = GetHorizontalInput();
 
@@ -155,14 +192,11 @@ public class PlayerController : MonoBehaviour
         else if (horizontal < -0.01f && facingRight)
             Flip();
 
-        // Registramos el salto inmediatamente.
         if (controls.Player.Jump.WasPressedThisFrame() && isGrounded && !IsCrawling)
         {
             jumpRequested = true;
-            Sfx.Play(Sfx.Salto);
         }
 
-        // El disparo no necesita esperar al ciclo de fisica.
         if (controls.Player.Fire.WasPressedThisFrame())
         {
             Shoot();
@@ -177,6 +211,13 @@ public class PlayerController : MonoBehaviour
                 rb.linearVelocity.x,
                 jumpForce
             );
+
+            // Si el jugador tiene su propio audio (CharacterAudio) se usa ese;
+            // si no, el efecto generico.
+            if (characterAudio != null)
+                characterAudio.PlayJump();
+            else
+                Sfx.Play(Sfx.Salto);
 
             jumpRequested = false;
         }
@@ -198,6 +239,37 @@ public class PlayerController : MonoBehaviour
         return isCrouching ? 0f : moveInput.x;
     }
 
+    private void UpdateErrorAcceptance()
+    {
+        bool noHorizontalInput =
+            Mathf.Abs(moveInput.x) < 0.01f;
+
+        bool almostNoHorizontalMovement =
+            Mathf.Abs(rb.linearVelocity.x) <= stillVelocityTolerance;
+
+        bool almostNoVerticalMovement =
+            Mathf.Abs(rb.linearVelocity.y) <= stillVelocityTolerance;
+
+        bool completelyStill =
+            isGrounded &&
+            noHorizontalInput &&
+            almostNoHorizontalMovement &&
+            almostNoVerticalMovement;
+
+        if (completelyStill)
+        {
+            stillTimer += Time.deltaTime;
+
+            if (stillTimer >= acceptErrorDelay)
+                IsAcceptingError = true;
+        }
+        else
+        {
+            stillTimer = 0f;
+            IsAcceptingError = false;
+        }
+    }
+
     private void Shoot()
     {
         animator.SetTrigger("Attack");
@@ -215,7 +287,10 @@ public class PlayerController : MonoBehaviour
             spawn.rotation
         );
 
-        Sfx.Play(Sfx.Disparo);
+        if (characterAudio != null)
+            characterAudio.PlayShoot();
+        else
+            Sfx.Play(Sfx.Disparo);
     }
 
     private void Flip()

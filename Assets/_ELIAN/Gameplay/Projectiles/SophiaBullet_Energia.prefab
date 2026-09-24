@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7201111380373586840}
   - component: {fileID: 6871021008786283892}
   - component: {fileID: 1216396977168494364}
-  - component: {fileID: 2920229708908518763}
+  - component: {fileID: 6006780130114298956}
   m_Layer: 8
   m_Name: SophiaBullet_Energia
   m_TagString: Untagged
@@ -129,7 +129,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.9
---- !u!114 &2920229708908518763
+--- !u!114 &6006780130114298956
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,9 +138,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7967099017577418198}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7689a21b091206c4ca5c0138acad0cfd, type: 3}
+  m_Script: {fileID: 11500000, guid: f415a82e96bb45142b41114e0462d18a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyBullet
+  m_EditorClassIdentifier: Assembly-CSharp::SophiaBullet
   speed: 6
-  lifeTime: 3
-  damage: 1
+  rotationSpeed: 180
+  lifeTime: 8
