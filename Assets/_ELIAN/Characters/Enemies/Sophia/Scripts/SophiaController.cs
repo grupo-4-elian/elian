@@ -50,6 +50,7 @@ public class SophiaController : MonoBehaviour
 
     private Animator animator;
     private Health health;
+    private CharacterAudio characterAudio;
 
     private Transform player;
     private Collider2D playerCollider;
@@ -80,11 +81,17 @@ public class SophiaController : MonoBehaviour
         new SophiaBulletPhase2[3];
 
     public bool IsPhase2Active => phase2Active;
+    public bool IsBattleActive => battleActive;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
         health = GetComponent<Health>();
+        characterAudio = GetComponent<CharacterAudio>();
+
+        // Sophia permanece protegida hasta que comience su combate.
+        if (health != null)
+            health.SetInvulnerable(true);
 
         if (shieldVisual == null)
         {
@@ -471,7 +478,7 @@ public class SophiaController : MonoBehaviour
         int max
     )
     {
-        if (phase2Active)
+        if (!battleActive || phase2Active)
             return;
 
         int threshold =
@@ -565,6 +572,9 @@ public class SophiaController : MonoBehaviour
                 firePoint.position,
                 rotation
             );
+
+        if (characterAudio != null)
+            characterAudio.PlayShoot();
 
         SophiaBullet phase1Bullet =
             bullet.GetComponent<SophiaBullet>();

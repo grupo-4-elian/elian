@@ -1034,6 +1034,9 @@ GameObject:
   - component: {fileID: 374557219}
   - component: {fileID: 374557218}
   - component: {fileID: 374557225}
+  - component: {fileID: 374557227}
+  - component: {fileID: 374557226}
+  - component: {fileID: 374557228}
   m_Layer: 7
   m_Name: Sophia
   m_TagString: Untagged
@@ -1286,6 +1289,141 @@ MonoBehaviour:
   shieldFadeDuration: 0.1
   shieldImpactScaleMultiplier: 1.15
   shieldFadeAlpha: 0.04
+--- !u!114 &374557226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374557216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d023af0cee2b654196d0271b25a5876, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAudio
+  shootClips:
+  - {fileID: 8300000, guid: 789dc318d4360774b808b479a9bad508, type: 3}
+  - {fileID: 8300000, guid: 61a5c39c58c7d4f40addd33d31694e92, type: 3}
+  - {fileID: 8300000, guid: b7bf34967f2fee54094bd1995d46828f, type: 3}
+  attackClips: []
+  hurtClips:
+  - {fileID: 8300000, guid: a65437e1741b71148a43f11f3ed8c92f, type: 3}
+  - {fileID: 8300000, guid: 68d9f51f2a4ed6d439ac8ba1b5761675, type: 3}
+  deathClips:
+  - {fileID: 8300000, guid: 018c2053e17510d46a63387db9723bd0, type: 3}
+  jumpClips: []
+  landClips: []
+  laughClips:
+  - {fileID: 8300000, guid: 2338f51598c77774d942b46a6a6e1949, type: 3}
+--- !u!82 &374557227
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374557216}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &374557228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 374557216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38df2a46e2086c040aad6b758a4761e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SophiaLaughOnPlayerDamage
 --- !u!4 &407100646 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 133419686915653387, guid: 24e46719e23926b4884bebebe43c04f6, type: 3}
@@ -13138,6 +13276,58 @@ MonoBehaviour:
   minX: 10
   maxX: 108
   fixedY: 3.1875
+--- !u!1 &1819448570
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1819448572}
+  - component: {fileID: 1819448571}
+  m_Layer: 0
+  m_Name: Audio_Education
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1819448571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819448570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aa5bd7845f9dc7428c1cc637d1a0136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EducationAmbience
+  baseAmbience: {fileID: 8300000, guid: 832d43b89c0a6054188aae640caa0cc7, type: 3}
+  machineHum: {fileID: 8300000, guid: 0f3bb9fffe953404fb25010dc36328e1, type: 3}
+  glitchClip: {fileID: 8300000, guid: 2a54ef8c727c92841b1e65f0521b8c8c, type: 3}
+  baseVolume: 0.5
+  machineHumVolume: 0.3
+  glitchVolume: 0.5
+  minGlitchInterval: 8
+  maxGlitchInterval: 18
+--- !u!4 &1819448572
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1819448570}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 112, y: 3.65625, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1825258535 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 133419686915653387, guid: 24e46719e23926b4884bebebe43c04f6, type: 3}
@@ -14267,7 +14457,7 @@ Transform:
   m_GameObject: {fileID: 2053764460}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 102, y: 0, z: 0}
+  m_LocalPosition: {x: 2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14432,12 +14622,19 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 70912bd0e6ac3bf4893aad6b1326304e, type: 3}
   - {fileID: 8300000, guid: 2f688fae346ee0742a2c2e5367e153c2, type: 3}
   attackClips: []
-  hurtClips: []
-  deathClips: []
+  hurtClips:
+  - {fileID: 8300000, guid: e7209bc6a2b4aa244987281ad1a19563, type: 3}
+  - {fileID: 8300000, guid: 9a493a49cb335624a9281a3ccb2c0f6a, type: 3}
+  - {fileID: 8300000, guid: 889dff07b24775c46b55e26c1704fe96, type: 3}
+  deathClips:
+  - {fileID: 8300000, guid: 76118da940bfc9a4f8c22784cc0d662a, type: 3}
+  - {fileID: 8300000, guid: 25e22719142aab445bc797eadb2bddc2, type: 3}
+  - {fileID: 8300000, guid: 9d026739a77eb9c428532127d6c71627, type: 3}
   jumpClips:
   - {fileID: 8300000, guid: 8d6d1b9046f2eee4daa9be8f9c39d1a4, type: 3}
   - {fileID: 8300000, guid: e0db83eadd7537a41a974cf5b3286de8, type: 3}
-  landClips: []
+  landClips:
+  - {fileID: 8300000, guid: c4793ce14cf2462468ca843c21325e52, type: 3}
   laughClips: []
 --- !u!82 &2053764471
 AudioSource:
@@ -14923,3 +15120,4 @@ SceneRoots:
   - {fileID: 1045852669}
   - {fileID: 1605072079}
   - {fileID: 586482285}
+  - {fileID: 1819448572}

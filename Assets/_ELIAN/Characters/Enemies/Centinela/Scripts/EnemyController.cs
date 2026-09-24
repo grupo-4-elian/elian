@@ -21,6 +21,7 @@ public class EnemyController : MonoBehaviour
     private Animator animator;
     private Transform player;
     private Health playerHealth;
+    private CharacterAudio characterAudio;
 
     private bool facingRight = true;
     private float lastAttackTime = -99f;
@@ -29,6 +30,7 @@ public class EnemyController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        characterAudio = GetComponent<CharacterAudio>();
 
         if (isFlying)
             rb.gravityScale = 0f;
@@ -71,7 +73,12 @@ public class EnemyController : MonoBehaviour
                 lastAttackTime = Time.time;
 
                 if (playerHealth != null && !playerHealth.IsDead)
+                {
+                    if (characterAudio != null)
+                        characterAudio.PlayAttack();
+
                     playerHealth.TakeDamage(attackDamage);
+                }
             }
         }
         else if (detectionDistance <= detectionRange)

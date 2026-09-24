@@ -20,6 +20,7 @@ public class CodiceController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private Transform player;
+    private CharacterAudio characterAudio;
 
     private bool facingRight = true;
     private float lastShootTime = -99f;
@@ -28,6 +29,7 @@ public class CodiceController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        characterAudio = GetComponent<CharacterAudio>();
 
         if (isFlying)
             rb.gravityScale = 0f;
@@ -59,6 +61,9 @@ public class CodiceController : MonoBehaviour
             if (Time.time >= lastShootTime + shootCooldown)
             {
                 animator.SetTrigger("Attack");
+
+                if (characterAudio != null)
+                    characterAudio.PlayAttack();
                 lastShootTime = Time.time;
                 Shoot();
             }
@@ -110,6 +115,9 @@ public class CodiceController : MonoBehaviour
         Quaternion bulletRotation = Quaternion.Euler(0f, 0f, angle);
 
         Instantiate(bulletPrefab, firePoint.position, bulletRotation);
+
+        if (characterAudio != null)
+            characterAudio.PlayShoot();
     }
 
     private void LookAtPlayer()

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput = Vector2.zero;
 
     private bool isGrounded = false;
+    private bool wasGrounded = false;
+    private bool groundStateInitialized = false;
     private bool isCrouching = false;
     private bool isAimingUp = false;
     private bool facingRight = true;
@@ -75,6 +77,24 @@ public class PlayerController : MonoBehaviour
             groundCheckRadius,
             groundLayer
         );
+
+        if (!groundStateInitialized)
+        {
+            wasGrounded = isGrounded;
+            groundStateInitialized = true;
+        }
+        else
+        {
+            if (isGrounded &&
+                !wasGrounded &&
+                rb.linearVelocity.y <= 0.1f &&
+                characterAudio != null)
+            {
+                characterAudio.PlayLand();
+            }
+
+            wasGrounded = isGrounded;
+        }
 
         isCrouching = moveInput.y < 0f && isGrounded;
         isAimingUp = moveInput.y > 0f;
