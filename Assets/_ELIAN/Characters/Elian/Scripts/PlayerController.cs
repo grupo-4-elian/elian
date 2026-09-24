@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private PlayerControls controls;
+    private CharacterAudio characterAudio;
 
     private Vector2 moveInput = Vector2.zero;
 
@@ -49,6 +50,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         controls = new PlayerControls();
+        characterAudio = GetComponent<CharacterAudio>();
     }
 
     private void OnEnable()
@@ -111,6 +113,9 @@ public class PlayerController : MonoBehaviour
                 jumpForce
             );
 
+            if (characterAudio != null)
+                characterAudio.PlayJump();
+
             jumpRequested = false;
         }
 
@@ -169,6 +174,9 @@ public class PlayerController : MonoBehaviour
             spawn.position,
             spawn.rotation
         );
+
+        if (characterAudio != null)
+            characterAudio.PlayShoot();
     }
 
     private void Flip()
