@@ -55,6 +55,8 @@ public class ColumnHazard : MonoBehaviour
         if (columnCollider != null)
             columnCollider.enabled = true;
 
+        Sfx.Play(Sfx.Descarga, 0.7f);
+
         yield return new WaitForSeconds(activeDuration);
 
         Destroy(gameObject);
@@ -67,7 +69,8 @@ public class ColumnHazard : MonoBehaviour
 
         Health health = other.GetComponentInParent<Health>();
 
-        if (health == null)
+        // Solo daña al jugador (no a Sophia ni a otros enemigos).
+        if (health == null || !health.CompareTag("Player"))
             return;
 
         damageDealt = true;

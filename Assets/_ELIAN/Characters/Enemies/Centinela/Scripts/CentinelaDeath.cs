@@ -30,6 +30,7 @@ public class CentinelaDeath : MonoBehaviour
         // Limpia un Hurt pendiente para que no compita con la muerte
         animator.ResetTrigger("Hurt");
         animator.SetTrigger("Die");
+        Sfx.Play(Sfx.Explosion);
 
         // Impide que un dano posterior interrumpa la animacion
         CentinelaHurt ch = GetComponent<CentinelaHurt>();

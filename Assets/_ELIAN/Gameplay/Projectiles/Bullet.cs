@@ -26,6 +26,15 @@ public class Bullet : MonoBehaviour
 
         Health health = other.GetComponentInParent<Health>();
 
+        // Un collider hijo del jugador que no tenga el tag "Player".
+        if (health != null && health.CompareTag("Player"))
+            return;
+
+        // Zonas invisibles (dialogos, encuentros), columnas y otras balas:
+        // son triggers sin vida, la bala los atraviesa.
+        if (other.isTrigger && health == null)
+            return;
+
         if (health != null)
             health.TakeDamage(damage);
 

@@ -344,6 +344,57 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9740a91fe23323147ab1021f8038efae, type: 3}
+--- !u!1 &54025053
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 54025055}
+  - component: {fileID: 54025054}
+  m_Layer: 0
+  m_Name: LevelTitleCard
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &54025054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 54025053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 916c91cccffc50044979ef71442b4fb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelTitleCard
+  subtitle: NIVEL 1
+  title: "LIMBO DE LA EDUCACI\xD3N"
+  titleColor: {r: 0.4, g: 0.9, b: 1, a: 1}
+  hint: "\xA1COMIENZA!"
+  fadeIn: 0.6
+  hold: 2
+  fadeOut: 0.8
+--- !u!4 &54025055
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 54025053}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &54029793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1070,6 +1121,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SophiaDeath
   destroyDelay: 1
+  victoryDelay: 1.5
+  bossDisplayName: Sophia
+  nextSceneName: SCN_02_Trabajo
 --- !u!114 &374557219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2824,6 +2878,10 @@ MonoBehaviour:
   - {fileID: 1717267127, guid: 31837ceabe69fa644b185ddff74d3e72, type: 3}
   - {fileID: 2081463755, guid: 31837ceabe69fa644b185ddff74d3e72, type: 3}
   - {fileID: 87745944, guid: 31837ceabe69fa644b185ddff74d3e72, type: 3}
+  ecoObreroPortraitFrames: []
+  optimaPortraitFrames: []
+  ecoObreroPortraitTint: {r: 0.95, g: 0.8, b: 0.6, a: 1}
+  optimaPortraitTint: {r: 1, g: 0.6, b: 0.3, a: 1}
   portraitFrameRate: 8
 --- !u!1 &1078981803
 GameObject:
@@ -12888,7 +12946,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.008944485, g: 0.009134846, b: 0.009433985, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -12906,9 +12964,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0
-    width: 1
-    height: 1
+    y: 0.18691587
+    width: 0.8173691
+    height: 1.1214952
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -12957,7 +13015,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollowPlayer
   Player: {fileID: 2053764460}
-  minX: 10
+  useLevelBounds: 1
+  levelLeftEdge: 0
+  levelRightEdge: 120
+  minX: 15
   maxX: 108
   fixedY: 3.1875
 --- !u!4 &1825258535 stripped
@@ -14120,6 +14181,8 @@ MonoBehaviour:
   firePoint: {fileID: 2036951563}
   firePointUp: {fileID: 136851524}
   firePointCrouch: {fileID: 1901740515}
+  crawlSpeed: 3
+  crawlColliderHeight: 2
 --- !u!61 &2053764465
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14219,6 +14282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDeath
   restartDelay: 1.5
+  gameOverDuration: 3
 --- !u!114 &2053764469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14232,6 +14296,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHurt
   hurtLockDuration: 0.35
+  invulnerabilityDuration: 1
+  blinkInterval: 0.1
 --- !u!1001 &2068150513
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14619,3 +14685,4 @@ SceneRoots:
   - {fileID: 1045852669}
   - {fileID: 1605072079}
   - {fileID: 586482285}
+  - {fileID: 54025055}

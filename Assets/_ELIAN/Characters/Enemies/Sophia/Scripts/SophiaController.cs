@@ -32,6 +32,7 @@ public class SophiaController : MonoBehaviour
     private bool phase2Active = false;
 
     private Transform player;
+    private Health playerHealth;
     private bool facingRight = true;
     private bool battleActive = false;
     private float lastShootTime = -99f;
@@ -41,6 +42,11 @@ public class SophiaController : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         health = GetComponent<Health>();
+
+        if (health == null)
+            Debug.LogWarning("[SophiaController] Falta el componente Health: la Fase 2 nunca se va a activar.");
+        else
+            health.IsInvulnerable = true; // No se la puede dañar hasta que arranque la pelea.
     }
 
     private void OnEnable()
@@ -60,7 +66,10 @@ public class SophiaController : MonoBehaviour
         GameObject p = GameObject.FindGameObjectWithTag("Player");
 
         if (p != null)
+        {
             player = p.transform;
+            playerHealth = p.GetComponent<Health>();
+        }
     }
 
     private void Update()
@@ -72,7 +81,11 @@ public class SophiaController : MonoBehaviour
         // (por ejemplo mientras transcurre el diálogo previo).
         LookAtPlayer();
 
-        if (!battleActive)
+        if (!battleActive || DialogueManager.IsDialogueActive)
+            return;
+
+        // Con Elian muerto deja de atacar mientras se reinicia el nivel.
+        if (playerHealth != null && playerHealth.IsDead)
             return;
 
         if (Time.time >= lastShootTime + shootCooldown)
@@ -93,6 +106,9 @@ public class SophiaController : MonoBehaviour
     public void StartBattle()
     {
         battleActive = true;
+
+        if (health != null)
+            health.IsInvulnerable = false;
     }
 
     private void HandleHealthChanged(int current, int max)
@@ -129,6 +145,7 @@ public class SophiaController : MonoBehaviour
         Quaternion bulletRotation = Quaternion.Euler(0f, 0f, angle);
 
         Instantiate(bulletPrefab, firePoint.position, bulletRotation);
+        Sfx.Play(Sfx.DisparoEnemigo, 0.8f);
     }
 
     private void SpawnColumnAttack()
@@ -143,9 +160,6 @@ public class SophiaController : MonoBehaviour
 
         Vector3 spawnPosition = GetGroundPositionBelow(player.position);
         spawnPosition.y += columnSpawnYOffset;
-
-        // TEMPORAL: para diagnosticar por qué no se ve. Se puede borrar después.
-        Debug.Log($"[SophiaController] Columna '{prefab.name}' instanciada en {spawnPosition}");
 
         Instantiate(prefab, spawnPosition, Quaternion.identity);
     }
