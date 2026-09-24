@@ -29,6 +29,11 @@ public class EnemyBullet : MonoBehaviour
 
         Health health = other.GetComponentInParent<Health>();
 
+        // Zonas invisibles (dialogos, encuentros), columnas y otras balas:
+        // son triggers sin vida, la bala los atraviesa.
+        if (other.isTrigger && health == null)
+            return;
+
         if (health != null)
             health.TakeDamage(damage);
 

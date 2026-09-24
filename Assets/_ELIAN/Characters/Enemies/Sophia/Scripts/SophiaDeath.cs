@@ -5,6 +5,14 @@ using UnityEngine;
 public class SophiaDeath : MonoBehaviour
 {
     [SerializeField] private float destroyDelay = 1f;
+    [Tooltip("Segundos desde la muerte de Sophia hasta que aparece la pantalla de victoria.")]
+    [SerializeField] private float victoryDelay = 1.5f;
+
+    [Header("Progresion")]
+    [Tooltip("Nombre que se muestra en la pantalla de victoria.")]
+    [SerializeField] private string bossDisplayName = "Sophia";
+    [Tooltip("Escena que se carga al continuar (debe estar en Build Settings). Vacio = ultimo nivel.")]
+    [SerializeField] private string nextSceneName = "";
 
     private Health health;
     private Animator animator;
@@ -27,8 +35,14 @@ public class SophiaDeath : MonoBehaviour
 
     private void OnDeath()
     {
-        animator.ResetTrigger("Hurt");
-        animator.SetTrigger("Die");
+        // Sophia_AC todavia no tiene "Hurt" ni "Die": solo los usamos si existen.
+        if (SophiaHurt.HasParameter(animator, "Hurt"))
+            animator.ResetTrigger("Hurt");
+
+        if (SophiaHurt.HasParameter(animator, "Die"))
+            animator.SetTrigger("Die");
+
+        Sfx.Play(Sfx.ExplosionJefe);
 
         SophiaHurt sh = GetComponent<SophiaHurt>();
         if (sh != null)
@@ -45,6 +59,10 @@ public class SophiaDeath : MonoBehaviour
             rb.linearVelocity = Vector2.zero;
             rb.bodyType = RigidbodyType2D.Kinematic;
         }
+
+        // Sophia es el boss final del nivel: mostramos la pantalla de victoria
+        // un poco despues, cuando ya desaparecio.
+        VictoryScreen.Show(victoryDelay, bossDisplayName, nextSceneName);
 
         Destroy(gameObject, destroyDelay);
     }

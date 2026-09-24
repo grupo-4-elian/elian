@@ -8,10 +8,17 @@ public class PlayerHurt : MonoBehaviour
     [Header("Reaccion al daño")]
     [SerializeField] private float hurtLockDuration = 0.35f;
 
+    [Header("Invencibilidad")]
+    [Tooltip("Segundos sin recibir daño despues de un golpe.")]
+    [SerializeField] private float invulnerabilityDuration = 1f;
+    [Tooltip("Cada cuantos segundos parpadea el sprite durante la invencibilidad.")]
+    [SerializeField] private float blinkInterval = 0.1f;
+
     private Health health;
     private Animator animator;
     private PlayerController playerController;
     private Rigidbody2D rb;
+    private SpriteRenderer[] spriteRenderers;
 
     private void Awake()
     {
@@ -19,6 +26,7 @@ public class PlayerHurt : MonoBehaviour
         animator = GetComponent<Animator>();
         playerController = GetComponent<PlayerController>();
         rb = GetComponent<Rigidbody2D>();
+        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
     }
 
     private void OnEnable()
@@ -29,6 +37,12 @@ public class PlayerHurt : MonoBehaviour
     private void OnDisable()
     {
         health.HealthChanged -= OnHealthChanged;
+
+        // Si se desactiva a mitad del parpadeo (ej. al morir), dejamos
+        // el sprite visible y la vida en estado normal.
+        StopAllCoroutines();
+        SetSpritesVisible(true);
+        health.IsInvulnerable = false;
     }
 
     private void OnHealthChanged(int current, int max)
@@ -37,9 +51,11 @@ public class PlayerHurt : MonoBehaviour
             return;
 
         animator.SetTrigger("Hurt");
+        Sfx.Play(Sfx.GolpeJugador);
 
         StopAllCoroutines();
         StartCoroutine(HurtLock());
+        StartCoroutine(Invulnerability());
     }
 
     private IEnumerator HurtLock()
@@ -52,7 +68,38 @@ public class PlayerHurt : MonoBehaviour
 
         yield return new WaitForSeconds(hurtLockDuration);
 
-        if (!health.IsDead && playerController != null)
+        // Si hay un dialogo abierto, es el DialogueManager quien devuelve
+        // el control al terminar; no lo reactivamos aca.
+        if (!health.IsDead && !DialogueManager.IsDialogueActive && playerController != null)
             playerController.enabled = true;
+    }
+
+    private IEnumerator Invulnerability()
+    {
+        health.IsInvulnerable = true;
+
+        float elapsed = 0f;
+        bool visible = true;
+
+        while (elapsed < invulnerabilityDuration)
+        {
+            visible = !visible;
+            SetSpritesVisible(visible);
+
+            yield return new WaitForSeconds(blinkInterval);
+            elapsed += blinkInterval;
+        }
+
+        SetSpritesVisible(true);
+        health.IsInvulnerable = false;
+    }
+
+    private void SetSpritesVisible(bool visible)
+    {
+        foreach (SpriteRenderer sr in spriteRenderers)
+        {
+            if (sr != null)
+                sr.enabled = visible;
+        }
     }
 }

@@ -29,14 +29,15 @@ public class CodiceDeath : MonoBehaviour
     {
         animator.ResetTrigger("Hurt");
         animator.SetTrigger("Die");
+        Sfx.Play(Sfx.Explosion);
 
         CodiceHurt ch = GetComponent<CodiceHurt>();
         if (ch != null)
             ch.enabled = false;
 
-        EnemyController ec = GetComponent<EnemyController>();
-        if (ec != null)
-            ec.enabled = false;
+        CodiceController cc = GetComponent<CodiceController>();
+        if (cc != null)
+            cc.enabled = false;
 
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
 

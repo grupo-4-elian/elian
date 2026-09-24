@@ -9,9 +9,13 @@ public class DialogueManager : MonoBehaviour
 {
     public enum Speaker
     {
+        // El orden importa: las escenas guardan el numero, no el nombre.
+        // Los nuevos hablantes se agregan siempre al final.
         Eco,
         Elian,
-        Sophia
+        Sophia,
+        EcoObrero, // Nivel 2 - Limbo del Trabajo
+        Optima     // Nivel 2 - jefe
     }
 
     [Serializable]
@@ -36,12 +40,23 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Sprite[] ecoPortraitFrames;
     [Tooltip("Frames del retrato de Sophia, en orden.")]
     [SerializeField] private Sprite[] sophiaPortraitFrames;
-    [Tooltip("Cuadros por segundo de la animación de retrato (aplica a los tres).")]
+    [Tooltip("Frames del retrato del Eco Obrero (nivel 2), en orden.")]
+    [SerializeField] private Sprite[] ecoObreroPortraitFrames;
+    [Tooltip("Frames del retrato de Optima (nivel 2), en orden.")]
+    [SerializeField] private Sprite[] optimaPortraitFrames;
+
+    [Header("Tintes de retrato (nivel 2)")]
+    [Tooltip("Mientras no haya arte propio, se reutilizan retratos del nivel 1 con este tinte.")]
+    [SerializeField] private Color ecoObreroPortraitTint = new Color(0.95f, 0.8f, 0.6f);
+    [SerializeField] private Color optimaPortraitTint = new Color(1f, 0.6f, 0.3f);
+
+    [Tooltip("Cuadros por segundo de la animación de retrato (aplica a todos).")]
     [SerializeField] private float portraitFrameRate = 8f;
 
     private DialogueLine[] currentLines;
     private int currentLine;
     private bool dialogueActive;
+    private int dialogueStartFrame = -1;
 
     private Action onDialogueFinished;
 
@@ -57,16 +72,45 @@ public class DialogueManager : MonoBehaviour
             dialoguePanel.SetActive(false);
     }
 
+    // Otros scripts (ej. PlayerHurt) lo consultan para no devolverle
+    // el control al jugador en mitad de un dialogo.
+    public static bool IsDialogueActive { get; private set; }
+
+    private void OnDisable()
+    {
+        // Si la escena se recarga con un dialogo abierto, que no quede trabado.
+        if (dialogueActive)
+            IsDialogueActive = false;
+    }
+
     private void Update()
     {
-        if (!dialogueActive)
+        if (!dialogueActive || PauseMenu.IsPaused)
             return;
 
-        if (Keyboard.current != null &&
-            Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
+        // Ignoramos el frame en que arranco el dialogo: si el jugador entro
+        // a la zona saltando, ese mismo Espacio se salteaba la primera linea.
+        if (Time.frameCount == dialogueStartFrame)
+            return;
+
+        if (AdvancePressedThisFrame())
             NextLine();
-        }
+    }
+
+    private static bool AdvancePressedThisFrame()
+    {
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard != null &&
+            (keyboard.spaceKey.wasPressedThisFrame ||
+             keyboard.enterKey.wasPressedThisFrame ||
+             keyboard.numpadEnterKey.wasPressedThisFrame))
+            return true;
+
+        Gamepad gamepad = Gamepad.current;
+        if (gamepad != null && gamepad.buttonSouth.wasPressedThisFrame)
+            return true;
+
+        return false;
     }
 
     public void StartDialogue(
@@ -79,6 +123,8 @@ public class DialogueManager : MonoBehaviour
         currentLines = lines;
         currentLine = 0;
         dialogueActive = true;
+        IsDialogueActive = true;
+        dialogueStartFrame = Time.frameCount;
         onDialogueFinished = onFinished;
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -129,6 +175,7 @@ public class DialogueManager : MonoBehaviour
     {
         string speakerName = "";
         Sprite[] frames = null;
+        Color portraitTint = Color.white;
 
         switch (speaker)
         {
@@ -146,10 +193,25 @@ public class DialogueManager : MonoBehaviour
                 speakerName = "SOPHIA";
                 frames = sophiaPortraitFrames;
                 break;
+
+            case Speaker.EcoObrero:
+                speakerName = "ECO OBRERO";
+                frames = ecoObreroPortraitFrames;
+                portraitTint = ecoObreroPortraitTint;
+                break;
+
+            case Speaker.Optima:
+                speakerName = "ÓPTIMA";
+                frames = optimaPortraitFrames;
+                portraitTint = optimaPortraitTint;
+                break;
         }
 
         if (speakerNameText != null)
             speakerNameText.text = speakerName;
+
+        if (portraitImage != null)
+            portraitImage.color = portraitTint;
 
         // Frenamos cualquier animación de retrato previa antes de arrancar la nueva.
         StopPortraitAnimation();
@@ -209,16 +271,34 @@ public class DialogueManager : MonoBehaviour
     private void EndDialogue()
     {
         dialogueActive = false;
+        IsDialogueActive = false;
 
         StopPortraitAnimation();
 
         if (dialoguePanel != null)
             dialoguePanel.SetActive(false);
 
-        if (playerController != null)
-            playerController.enabled = true;
+        StartCoroutine(ReturnControlNextFrame());
 
         onDialogueFinished?.Invoke();
         onDialogueFinished = null;
+    }
+
+    // La tecla que cierra el dialogo (Espacio) es la misma que la de salto.
+    // Esperamos un frame para que ese mismo "press" no haga saltar a Elian.
+    private IEnumerator ReturnControlNextFrame()
+    {
+        yield return null;
+
+        // Si en ese frame arranco otro dialogo encadenado, el jugador sigue congelado.
+        if (dialogueActive || playerController == null)
+            yield break;
+
+        // No revivir el control si Elian murio durante el dialogo.
+        Health playerHealth = playerController.GetComponent<Health>();
+        if (playerHealth != null && playerHealth.IsDead)
+            yield break;
+
+        playerController.enabled = true;
     }
 }

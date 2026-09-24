@@ -29,5 +29,6 @@ public class CodiceHurt : MonoBehaviour
             return;
 
         animator.SetTrigger("Hurt");
+        Sfx.Play(Sfx.GolpeEnemigo);
     }
 }

@@ -20,6 +20,7 @@ public class CodiceController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private Transform player;
+    private Health playerHealth;
 
     private bool facingRight = true;
     private float lastShootTime = -99f;
@@ -38,13 +39,28 @@ public class CodiceController : MonoBehaviour
         GameObject p = GameObject.FindGameObjectWithTag("Player");
 
         if (p != null)
+        {
             player = p.transform;
+            playerHealth = p.GetComponent<Health>();
+        }
     }
+
+    // Durante un dialogo (o con Elian muerto) Codice se queda quieto
+    // y no dispara: el jugador no puede moverse ni defenderse.
+    private bool IsPaused =>
+        DialogueManager.IsDialogueActive ||
+        (playerHealth != null && playerHealth.IsDead);
 
     private void Update()
     {
         if (player == null)
             return;
+
+        if (IsPaused)
+        {
+            animator.SetFloat("Speed", 0f);
+            return;
+        }
 
         // Distancia solo en X: a Codice no le importa la diferencia de
         // altura, para que se quede flotando arriba en vez de bajar
@@ -81,7 +97,7 @@ public class CodiceController : MonoBehaviour
 
         float distance = Mathf.Abs(transform.position.x - player.position.x);
 
-        if (distance <= detectionRange && distance > shootRange)
+        if (!IsPaused && distance <= detectionRange && distance > shootRange)
         {
             // Solo se mueve en X, tanto volando como caminando: mantiene
             // su altura actual siempre, nunca persigue en Y.
@@ -110,6 +126,7 @@ public class CodiceController : MonoBehaviour
         Quaternion bulletRotation = Quaternion.Euler(0f, 0f, angle);
 
         Instantiate(bulletPrefab, firePoint.position, bulletRotation);
+        Sfx.Play(Sfx.DisparoEnemigo, 0.7f);
     }
 
     private void LookAtPlayer()
