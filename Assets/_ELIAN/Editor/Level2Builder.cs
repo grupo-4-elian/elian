@@ -33,7 +33,6 @@ public static class Level2Builder
     private const string BackgroundsFolder = "Assets/_ELIAN/Levels/01_Education/Environment/Backgrounds";
     private const string PlatformSpritePath = Level2Folder + "/Environment/plataforma_industrial.png";
     private const string WallSpritePath = Level2Folder + "/Environment/muro_industrial.png";
-    private const string ProjectilesFolder = "Assets/_ELIAN/Gameplay/Projectiles";
     private const string PressPrefabPath = "Assets/_ELIAN/Gameplay/VFX/Columna_Dorada.prefab";
     private const string CentinelaPrefabPath = "Assets/_ELIAN/Characters/Enemies/Centinela/Prefabs/PF_Centinela.prefab";
     private const string CodicePrefabPath = "Assets/_ELIAN/Characters/Enemies/Codice/Prefabs/PF_Codice.prefab";
@@ -206,9 +205,13 @@ public static class Level2Builder
         Sprite wallSprite = PrepareSprite(WallSpritePath);
 
         if (AssetDatabase.LoadAssetAtPath<SceneAsset>(Level2Path) != null)
-            AssetDatabase.DeleteAsset(Level2Path);
-
-        if (!AssetDatabase.CopyAsset(Level1Path, Level2Path))
+        {
+            // Se sobrescribe el archivo en lugar de borrarlo, para conservar
+            // el GUID de la escena (Build Settings y referencias no cambian).
+            System.IO.File.Copy(ToFullPath(Level1Path), ToFullPath(Level2Path), true);
+            AssetDatabase.ImportAsset(Level2Path, ImportAssetOptions.ForceSynchronousImport);
+        }
+        else if (!AssetDatabase.CopyAsset(Level1Path, Level2Path))
         {
             Debug.LogError($"[Level2Builder] No se pudo copiar {Level1Path}");
             return;
@@ -634,8 +637,9 @@ public static class Level2Builder
         so.FindProperty("shootCooldown").floatValue = 1.1f;
         so.FindProperty("columnCooldown").floatValue = 3.2f;
         so.FindProperty("phase2HealthThreshold").floatValue = 0.6f;
-        SetPrefab(so, "bulletPrefab", "SophiaBullet_Energia_v2");
-        SetPrefab(so, "bulletPrefabPhase2", "SophiaBullet_Rojo_v2");
+        // Las balas se mantienen: el combate depende de SophiaBullet /
+        // SophiaBulletPhase2 ("recibir el error" y devolverlo para romper
+        // el escudo). Con otras balas el jefe seria invencible.
         so.ApplyModifiedPropertiesWithoutUndo();
 
         SophiaDeath death = boss.GetComponent<SophiaDeath>();
@@ -736,6 +740,11 @@ public static class Level2Builder
         return go;
     }
 
+    private static string ToFullPath(string assetPath)
+    {
+        return System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Application.dataPath), assetPath);
+    }
+
     private static void EnsureFolder(string parent, string child)
     {
         if (!AssetDatabase.IsValidFolder(parent + "/" + child))
@@ -764,18 +773,6 @@ public static class Level2Builder
         SerializedProperty p = so.FindProperty(property);
         if (p != null)
             p.floatValue *= factor;
-    }
-
-    private static void SetPrefab(SerializedObject so, string property, string prefabName)
-    {
-        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{ProjectilesFolder}/{prefabName}.prefab");
-        if (prefab == null)
-        {
-            Debug.LogWarning($"[Level2Builder] No se encontro el prefab {prefabName}; se mantiene el del nivel 1.");
-            return;
-        }
-
-        so.FindProperty(property).objectReferenceValue = prefab;
     }
 
     private static void CopyArray(SerializedProperty from, SerializedProperty to)

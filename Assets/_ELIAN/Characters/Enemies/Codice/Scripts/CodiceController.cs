@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
@@ -21,6 +21,7 @@ public class CodiceController : MonoBehaviour
     private Animator animator;
     private Transform player;
     private Health playerHealth;
+    private CharacterAudio characterAudio;
 
     private bool facingRight = true;
     private float lastShootTime = -99f;
@@ -29,6 +30,7 @@ public class CodiceController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        characterAudio = GetComponent<CharacterAudio>();
 
         if (isFlying)
             rb.gravityScale = 0f;
@@ -75,6 +77,9 @@ public class CodiceController : MonoBehaviour
             if (Time.time >= lastShootTime + shootCooldown)
             {
                 animator.SetTrigger("Attack");
+
+                if (characterAudio != null)
+                    characterAudio.PlayAttack();
                 lastShootTime = Time.time;
                 Shoot();
             }
@@ -126,7 +131,13 @@ public class CodiceController : MonoBehaviour
         Quaternion bulletRotation = Quaternion.Euler(0f, 0f, angle);
 
         Instantiate(bulletPrefab, firePoint.position, bulletRotation);
-        Sfx.Play(Sfx.DisparoEnemigo, 0.7f);
+
+        // Si el prefab tiene su propio audio (CharacterAudio) se usa ese;
+        // si no, el efecto generico.
+        if (characterAudio != null)
+            characterAudio.PlayShoot();
+        else
+            Sfx.Play(Sfx.DisparoEnemigo, 0.7f);
     }
 
     private void LookAtPlayer()
