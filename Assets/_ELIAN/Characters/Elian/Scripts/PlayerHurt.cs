@@ -51,7 +51,7 @@ public class PlayerHurt : MonoBehaviour
             return;
 
         animator.SetTrigger("Hurt");
-        Sfx.Play(Sfx.GolpeJugador);
+        Sfx.PlayHurtFallback(this, Sfx.GolpeJugador);
 
         StopAllCoroutines();
         StartCoroutine(HurtLock());

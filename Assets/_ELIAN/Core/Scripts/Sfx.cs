@@ -37,6 +37,23 @@ public static class Sfx
         source.PlayOneShot(clip, volume * MasterVolume);
     }
 
+    // Reproduce el efecto generico solo si el personaje no tiene su propio
+    // sonido de daño en CharacterAudio (que ya suena solo al recibir daño).
+    public static void PlayHurtFallback(Component character, string name, float volume = 1f)
+    {
+        CharacterAudio ca = character != null ? character.GetComponent<CharacterAudio>() : null;
+        if (ca == null || !ca.HasHurtSound)
+            Play(name, volume);
+    }
+
+    // Igual que PlayHurtFallback, para el sonido de muerte.
+    public static void PlayDeathFallback(Component character, string name, float volume = 1f)
+    {
+        CharacterAudio ca = character != null ? character.GetComponent<CharacterAudio>() : null;
+        if (ca == null || !ca.HasDeathSound)
+            Play(name, volume);
+    }
+
     private static AudioClip GetClip(string name)
     {
         if (clips.TryGetValue(name, out AudioClip clip))

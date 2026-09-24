@@ -214,7 +214,7 @@ public class PlayerController : MonoBehaviour
 
             // Si el jugador tiene su propio audio (CharacterAudio) se usa ese;
             // si no, el efecto generico.
-            if (characterAudio != null)
+            if (characterAudio != null && characterAudio.HasJumpSound)
                 characterAudio.PlayJump();
             else
                 Sfx.Play(Sfx.Salto);
@@ -287,7 +287,7 @@ public class PlayerController : MonoBehaviour
             spawn.rotation
         );
 
-        if (characterAudio != null)
+        if (characterAudio != null && characterAudio.HasShootSound)
             characterAudio.PlayShoot();
         else
             Sfx.Play(Sfx.Disparo);

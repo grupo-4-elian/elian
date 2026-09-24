@@ -134,7 +134,7 @@ public class CodiceController : MonoBehaviour
 
         // Si el prefab tiene su propio audio (CharacterAudio) se usa ese;
         // si no, el efecto generico.
-        if (characterAudio != null)
+        if (characterAudio != null && characterAudio.HasShootSound)
             characterAudio.PlayShoot();
         else
             Sfx.Play(Sfx.DisparoEnemigo, 0.7f);
