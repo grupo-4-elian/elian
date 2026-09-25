@@ -1076,7 +1076,7 @@ MonoBehaviour:
   destroyDelay: 1
   victoryDelay: 1.5
   bossDisplayName: Sophia
-  nextSceneName: SCN_02_Trabajo
+  nextSceneName: SCN_02_Creacion
 --- !u!114 &374557219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3052,10 +3052,8 @@ MonoBehaviour:
   - {fileID: 1717267127, guid: 31837ceabe69fa644b185ddff74d3e72, type: 3}
   - {fileID: 2081463755, guid: 31837ceabe69fa644b185ddff74d3e72, type: 3}
   - {fileID: 87745944, guid: 31837ceabe69fa644b185ddff74d3e72, type: 3}
-  ecoObreroPortraitFrames: []
-  optimaPortraitFrames: []
-  ecoObreroPortraitTint: {r: 0.95, g: 0.8, b: 0.6, a: 1}
-  optimaPortraitTint: {r: 1, g: 0.6, b: 0.3, a: 1}
+  tadeoPortraitFrames: []
+  faberPortraitFrames: []
   portraitFrameRate: 8
 --- !u!1 &1078981803
 GameObject:
@@ -13337,6 +13335,7 @@ MonoBehaviour:
   minX: 10
   maxX: 108
   fixedY: 3.1875
+  lockLerpSpeed: 4
 --- !u!1 &1819448570
 GameObject:
   m_ObjectHideFlags: 0

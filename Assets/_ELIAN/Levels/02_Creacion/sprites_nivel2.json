@@ -1,0 +1,247 @@
+{
+ "sprites": [
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Ensamblador/Sprites/ENSAMBLADOR_IDLE.png",
+   "cellWidth": 112,
+   "cellHeight": 96,
+   "frames": 6,
+   "fps": 8,
+   "loop": true,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Ensamblador/Sprites/ENSAMBLADOR_WALK.png",
+   "cellWidth": 112,
+   "cellHeight": 96,
+   "frames": 8,
+   "fps": 10,
+   "loop": true,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Ensamblador/Sprites/ENSAMBLADOR_ATTACK.png",
+   "cellWidth": 144,
+   "cellHeight": 96,
+   "frames": 6,
+   "fps": 12,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Ensamblador/Sprites/ENSAMBLADOR_SPAWN.png",
+   "cellWidth": 144,
+   "cellHeight": 96,
+   "frames": 6,
+   "fps": 8,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Ensamblador/Sprites/ENSAMBLADOR_DEAD.png",
+   "cellWidth": 112,
+   "cellHeight": 112,
+   "frames": 7,
+   "fps": 10,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Corrector/Sprites/CORRECTOR_IDLE.png",
+   "cellWidth": 80,
+   "cellHeight": 112,
+   "frames": 6,
+   "fps": 8,
+   "loop": true,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Corrector/Sprites/CORRECTOR_RUN.png",
+   "cellWidth": 112,
+   "cellHeight": 96,
+   "frames": 8,
+   "fps": 14,
+   "loop": true,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Corrector/Sprites/CORRECTOR_SCAN.png",
+   "cellWidth": 144,
+   "cellHeight": 112,
+   "frames": 6,
+   "fps": 12,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Corrector/Sprites/CORRECTOR_ATTACK.png",
+   "cellWidth": 160,
+   "cellHeight": 128,
+   "frames": 6,
+   "fps": 14,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Corrector/Sprites/CORRECTOR_DEAD.png",
+   "cellWidth": 112,
+   "cellHeight": 128,
+   "frames": 7,
+   "fps": 10,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/DronSoldadura/Sprites/DRON_IDLE.png",
+   "cellWidth": 64,
+   "cellHeight": 80,
+   "frames": 6,
+   "fps": 10,
+   "loop": true,
+   "pivot": "center"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/DronSoldadura/Sprites/DRON_MOVE.png",
+   "cellWidth": 64,
+   "cellHeight": 80,
+   "frames": 6,
+   "fps": 10,
+   "loop": true,
+   "pivot": "center"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/DronSoldadura/Sprites/DRON_ATTACK.png",
+   "cellWidth": 96,
+   "cellHeight": 64,
+   "frames": 6,
+   "fps": 12,
+   "loop": false,
+   "pivot": "center"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/DronSoldadura/Sprites/DRON_DEAD.png",
+   "cellWidth": 80,
+   "cellHeight": 96,
+   "frames": 7,
+   "fps": 10,
+   "loop": false,
+   "pivot": "center"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Faber/Sprites/FABER_IDLE.png",
+   "cellWidth": 240,
+   "cellHeight": 272,
+   "frames": 8,
+   "fps": 8,
+   "loop": true,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Faber/Sprites/FABER_OPEN.png",
+   "cellWidth": 224,
+   "cellHeight": 288,
+   "frames": 8,
+   "fps": 10,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Faber/Sprites/FABER_DEAD.png",
+   "cellWidth": 224,
+   "cellHeight": 288,
+   "frames": 8,
+   "fps": 7,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Faber/Sprites/FABER_ATTACK.png",
+   "cellWidth": 272,
+   "cellHeight": 368,
+   "frames": 6,
+   "fps": 10,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Faber/Sprites/FABER_ARM_SLAM.png",
+   "cellWidth": 176,
+   "cellHeight": 272,
+   "frames": 6,
+   "fps": 12,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Faber/Sprites/FABER_POD_ENSAMBLADOR.png",
+   "cellWidth": 144,
+   "cellHeight": 144,
+   "frames": 6,
+   "fps": 8,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Faber/Sprites/FABER_POD_CORRECTOR.png",
+   "cellWidth": 112,
+   "cellHeight": 160,
+   "frames": 6,
+   "fps": 8,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Enemies/Faber/Sprites/FABER_REPLICA.png",
+   "cellWidth": 80,
+   "cellHeight": 96,
+   "frames": 6,
+   "fps": 12,
+   "loop": true,
+   "pivot": "center"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/NPC/Tadeo/Sprites/TADEO_IDLE.png",
+   "cellWidth": 96,
+   "cellHeight": 96,
+   "frames": 4,
+   "fps": 4,
+   "loop": true,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Elian/Sprites/ELIAN_PUSH.png",
+   "cellWidth": 112,
+   "cellHeight": 96,
+   "frames": 6,
+   "fps": 10,
+   "loop": true,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Elian/Sprites/ELIAN_CRAFT.png",
+   "cellWidth": 96,
+   "cellHeight": 112,
+   "frames": 6,
+   "fps": 8,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Elian/Sprites/ELIAN_RAISE.png",
+   "cellWidth": 96,
+   "cellHeight": 144,
+   "frames": 6,
+   "fps": 10,
+   "loop": false,
+   "pivot": "bottom"
+  },
+  {
+   "path": "Assets/_ELIAN/Characters/Elian/Sprites/ELIAN_ACTIVATE.png",
+   "cellWidth": 96,
+   "cellHeight": 176,
+   "frames": 6,
+   "fps": 10,
+   "loop": false,
+   "pivot": "bottom"
+  }
+ ]
+}

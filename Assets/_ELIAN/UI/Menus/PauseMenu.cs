@@ -14,7 +14,7 @@ public class PauseMenu : MonoBehaviour
     private static readonly (string label, string scene)[] Levels =
     {
         ("Ir al Nivel 1 - Educación", "SCN_01_Education"),
-        ("Ir al Nivel 2 - Trabajo", "SCN_02_Trabajo"),
+        ("Ir al Nivel 2 - Creación", "SCN_02_Creacion"),
     };
 
     private static bool paused;
