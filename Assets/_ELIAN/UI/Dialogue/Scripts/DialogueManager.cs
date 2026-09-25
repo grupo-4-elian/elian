@@ -14,8 +14,8 @@ public class DialogueManager : MonoBehaviour
         Eco,
         Elian,
         Sophia,
-        EcoObrero, // Nivel 2 - Limbo del Trabajo
-        Optima     // Nivel 2 - jefe
+        Tadeo,     // Nivel 2 - Tecnico / Operario
+        Faber      // Nivel 2 - jefe
     }
 
     [Serializable]
@@ -40,15 +40,10 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Sprite[] ecoPortraitFrames;
     [Tooltip("Frames del retrato de Sophia, en orden.")]
     [SerializeField] private Sprite[] sophiaPortraitFrames;
-    [Tooltip("Frames del retrato del Eco Obrero (nivel 2), en orden.")]
-    [SerializeField] private Sprite[] ecoObreroPortraitFrames;
-    [Tooltip("Frames del retrato de Optima (nivel 2), en orden.")]
-    [SerializeField] private Sprite[] optimaPortraitFrames;
-
-    [Header("Tintes de retrato (nivel 2)")]
-    [Tooltip("Mientras no haya arte propio, se reutilizan retratos del nivel 1 con este tinte.")]
-    [SerializeField] private Color ecoObreroPortraitTint = new Color(0.95f, 0.8f, 0.6f);
-    [SerializeField] private Color optimaPortraitTint = new Color(1f, 0.6f, 0.3f);
+    [Tooltip("Frames del retrato de Tadeo (nivel 2), en orden.")]
+    [SerializeField] private Sprite[] tadeoPortraitFrames;
+    [Tooltip("Frames del retrato de FABER (nivel 2), en orden.")]
+    [SerializeField] private Sprite[] faberPortraitFrames;
 
     [Tooltip("Cuadros por segundo de la animación de retrato (aplica a todos).")]
     [SerializeField] private float portraitFrameRate = 8f;
@@ -175,7 +170,6 @@ public class DialogueManager : MonoBehaviour
     {
         string speakerName = "";
         Sprite[] frames = null;
-        Color portraitTint = Color.white;
 
         switch (speaker)
         {
@@ -194,16 +188,14 @@ public class DialogueManager : MonoBehaviour
                 frames = sophiaPortraitFrames;
                 break;
 
-            case Speaker.EcoObrero:
-                speakerName = "ECO OBRERO";
-                frames = ecoObreroPortraitFrames;
-                portraitTint = ecoObreroPortraitTint;
+            case Speaker.Tadeo:
+                speakerName = "TADEO";
+                frames = tadeoPortraitFrames;
                 break;
 
-            case Speaker.Optima:
-                speakerName = "ÓPTIMA";
-                frames = optimaPortraitFrames;
-                portraitTint = optimaPortraitTint;
+            case Speaker.Faber:
+                speakerName = "FABER";
+                frames = faberPortraitFrames;
                 break;
         }
 
@@ -211,7 +203,7 @@ public class DialogueManager : MonoBehaviour
             speakerNameText.text = speakerName;
 
         if (portraitImage != null)
-            portraitImage.color = portraitTint;
+            portraitImage.color = Color.white;
 
         // Frenamos cualquier animación de retrato previa antes de arrancar la nueva.
         StopPortraitAnimation();

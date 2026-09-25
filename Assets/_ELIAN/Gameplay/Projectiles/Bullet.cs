@@ -30,6 +30,10 @@ public class Bullet : MonoBehaviour
         if (other.CompareTag("Player"))
             return;
 
+        // Muros que solo bloquean el paso de los personajes.
+        if (other.GetComponent<BulletPassThrough>() != null)
+            return;
+
         // -------------------------
         // BALA ROJA DE SOPHIA
         // -------------------------
@@ -52,6 +56,20 @@ public class Bullet : MonoBehaviour
             // Si todavía persigue a Elian
             // o aún no llegó al slot central,
             // el disparo la atraviesa y continúa.
+            return;
+        }
+
+        // -------------------------
+        // PIEZAS DEL DESCARTE (NIVEL 2)
+        // -------------------------
+
+        // Un disparo empuja la pieza en la direccion del tiro.
+        Pieza pieza = other.GetComponentInParent<Pieza>();
+
+        if (pieza != null)
+        {
+            pieza.OnShot(transform.right);
+            Destroy(gameObject);
             return;
         }
 

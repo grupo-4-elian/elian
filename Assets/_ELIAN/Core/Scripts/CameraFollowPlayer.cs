@@ -21,11 +21,29 @@ public class CameraFollowPlayer : MonoBehaviour
     [Header("Posicion vertical")]
     [SerializeField] private float fixedY = 3.1875f;
 
+    [Header("Bloqueo en arenas")]
+    [SerializeField] private float lockLerpSpeed = 4f;
+
     private Camera cam;
+    private bool locked;
+    private float lockX;
 
     private void Awake()
     {
         cam = GetComponent<Camera>();
+    }
+
+    // Fija la camara en una arena (p. ej. el combate contra un jefe) para
+    // que el jefe y el jugador se vean a la vez.
+    public void LockTo(float x)
+    {
+        locked = true;
+        lockX = x;
+    }
+
+    public void Unlock()
+    {
+        locked = false;
     }
 
     private void LateUpdate()
@@ -53,6 +71,10 @@ public class CameraFollowPlayer : MonoBehaviour
             left,
             right
         );
+
+        if (locked)
+            cameraX = Mathf.Lerp(transform.position.x, Mathf.Clamp(lockX, left, right),
+                                 1f - Mathf.Exp(-lockLerpSpeed * Time.deltaTime));
 
         transform.position = new Vector3(
             cameraX,
