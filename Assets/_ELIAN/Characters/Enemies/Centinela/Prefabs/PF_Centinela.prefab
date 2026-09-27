@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 1826466411523449192}
   - component: {fileID: 1531523725872002768}
   - component: {fileID: -6247293207733787956}
+  - component: {fileID: 235047922875915826}
   m_Layer: 7
   m_Name: PF_Centinela
   m_TagString: Untagged
@@ -374,3 +375,16 @@ MonoBehaviour:
   jumpClips: []
   landClips: []
   laughClips: []
+--- !u!114 &235047922875915826
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5368248653801552952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff0abe7b79cc5b4e8f48044117647b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HurtFlash
+  hurtColor: {r: 1, g: 0.45, b: 0.35, a: 1}

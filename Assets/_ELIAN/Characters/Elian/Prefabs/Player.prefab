@@ -253,6 +253,7 @@ MonoBehaviour:
   firePoint: {fileID: 814435326476916365}
   firePointUp: {fileID: 4197540607928883914}
   firePointCrouch: {fileID: 2424130485108446625}
+  fireCooldown: 1
   acceptErrorDelay: 0.35
   stillVelocityTolerance: 0.1
   crawlSpeed: 3
