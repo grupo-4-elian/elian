@@ -14345,9 +14345,9 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
-    y: 0
-    width: 1
-    height: 1
+    y: 0.03462322
+    width: 1.5276273
+    height: 0.73319757
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
@@ -15865,6 +15865,7 @@ MonoBehaviour:
   firePoint: {fileID: 2036951563}
   firePointUp: {fileID: 136851524}
   firePointCrouch: {fileID: 1901740515}
+  fireCooldown: 0.2
   acceptErrorDelay: 0.35
   stillVelocityTolerance: 0.1
   crawlSpeed: 3

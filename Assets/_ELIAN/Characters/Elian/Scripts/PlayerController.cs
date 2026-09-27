@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform firePoint;
     [SerializeField] private Transform firePointUp;
     [SerializeField] private Transform firePointCrouch;
+    [SerializeField] private float fireCooldown;
 
     [Header("Recibir el error")]
     [Tooltip("Tiempo que Elian debe permanecer quieto antes de poder recibir un error sin daño.")]
@@ -53,6 +55,7 @@ public class PlayerController : MonoBehaviour
     private bool jumpRequested = false;
 
     private float stillTimer = 0f;
+    private float currentFireCooldown = 0.0f;
 
     // Cantidad de CrawlZone en las que esta el jugador (pueden solaparse).
     private int crawlZones;
@@ -147,6 +150,11 @@ public class PlayerController : MonoBehaviour
         if (PauseMenu.IsPaused)
             return;
 
+        if (currentFireCooldown > 0.0f)
+        {
+            currentFireCooldown = Math.Max(0.0f, currentFireCooldown - Time.deltaTime);
+        }
+
         moveInput = controls.Player.Move.ReadValue<Vector2>();
 
         isGrounded = Physics2D.OverlapCircle(
@@ -197,7 +205,7 @@ public class PlayerController : MonoBehaviour
             jumpRequested = true;
         }
 
-        if (controls.Player.Fire.WasPressedThisFrame())
+        if (controls.Player.Fire.IsPressed())
         {
             Shoot();
         }
@@ -272,6 +280,8 @@ public class PlayerController : MonoBehaviour
 
     private void Shoot()
     {
+        if (currentFireCooldown > 0.0f) return;
+
         animator.SetTrigger("Attack");
 
         Transform spawn = firePoint;
@@ -291,6 +301,8 @@ public class PlayerController : MonoBehaviour
             characterAudio.PlayShoot();
         else
             Sfx.Play(Sfx.Disparo);
+
+        currentFireCooldown = fireCooldown;
     }
 
     private void Flip()
