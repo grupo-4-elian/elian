@@ -107,6 +107,27 @@ public class CharacterAudio : MonoBehaviour
         PlayDeath();
     }
 
+    // Permiten saber si este personaje tiene sonido propio para una accion,
+    // para no superponerlo con los efectos genericos de Sfx.
+    public bool HasShootSound => HasAny(shootClips);
+    public bool HasHurtSound => HasAny(hurtClips);
+    public bool HasDeathSound => HasAny(deathClips);
+    public bool HasJumpSound => HasAny(jumpClips);
+
+    private static bool HasAny(AudioClip[] clips)
+    {
+        if (clips == null)
+            return false;
+
+        foreach (AudioClip clip in clips)
+        {
+            if (clip != null)
+                return true;
+        }
+
+        return false;
+    }
+
     public void PlayShoot()
     {
         PlayRandom(shootClips);

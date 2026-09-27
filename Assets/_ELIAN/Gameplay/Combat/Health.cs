@@ -12,7 +12,14 @@ public class Health : MonoBehaviour
     public int MaxHealth => maxHealth;
     public int CurrentHealth { get; private set; }
     public bool IsDead => CurrentHealth <= 0;
-    public bool IsInvulnerable => invulnerable;
+
+    // Mientras sea true, TakeDamage no hace nada (frames de invencibilidad
+    // de Elian, jefe antes de la pelea, etc.). Equivale a SetInvulnerable().
+    public bool IsInvulnerable
+    {
+        get => invulnerable;
+        set => invulnerable = value;
+    }
 
     public event Action<int, int> HealthChanged;
     public event Action Died;

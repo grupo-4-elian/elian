@@ -7,7 +7,7 @@ public class SophiaBullet : MonoBehaviour
     [SerializeField] private float targetTravelTime = 1.2f;
 
     [SerializeField] private float minSpeed = 4f;
-    [SerializeField] private float maxSpeed = 7f;
+    [SerializeField] private float maxSpeed = 5f;
     [SerializeField] private float rotationSpeed = 180f;
 
     [Header("Daño")]
