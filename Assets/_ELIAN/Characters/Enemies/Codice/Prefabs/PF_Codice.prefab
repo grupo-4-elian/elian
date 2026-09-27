@@ -50,6 +50,7 @@ GameObject:
   - component: {fileID: 7407936941285025286}
   - component: {fileID: 458296951141041949}
   - component: {fileID: 4054985145958373858}
+  - component: {fileID: -3317538583819138753}
   m_Layer: 7
   m_Name: PF_Codice
   m_TagString: Untagged
@@ -405,3 +406,16 @@ MonoBehaviour:
   jumpClips: []
   landClips: []
   laughClips: []
+--- !u!114 &-3317538583819138753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5368248653801552952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ff0abe7b79cc5b4e8f48044117647b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HurtFlash
+  hurtColor: {r: 1, g: 0.45, b: 0.35, a: 1}

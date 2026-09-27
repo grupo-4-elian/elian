@@ -54,6 +54,7 @@ public class SophiaController : MonoBehaviour
 
     private Transform player;
     private Collider2D playerCollider;
+    private Health playerHealth;
 
     private SpriteRenderer shieldRenderer;
     private Color shieldBaseColor;
@@ -124,6 +125,7 @@ public class SophiaController : MonoBehaviour
         if (p != null)
         {
             player = p.transform;
+            playerHealth = p.GetComponent<Health>();
 
             playerCollider =
                 p.GetComponent<Collider2D>();
@@ -146,6 +148,12 @@ public class SophiaController : MonoBehaviour
         LookAtPlayer();
 
         if (!battleActive)
+            return;
+
+        // No ataca durante un dialogo ni con Elian muerto (mientras se
+        // reinicia el nivel).
+        if (DialogueManager.IsDialogueActive ||
+            (playerHealth != null && playerHealth.IsDead))
             return;
 
         // No mezcla una bala perseguidora
@@ -573,8 +581,10 @@ public class SophiaController : MonoBehaviour
                 rotation
             );
 
-        if (characterAudio != null)
+        if (characterAudio != null && characterAudio.HasShootSound)
             characterAudio.PlayShoot();
+        else
+            Sfx.Play(Sfx.DisparoEnemigo, 0.8f);
 
         SophiaBullet phase1Bullet =
             bullet.GetComponent<SophiaBullet>();
