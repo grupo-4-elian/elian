@@ -21,6 +21,7 @@ public class EnemyController : MonoBehaviour
     private Animator animator;
     private Transform player;
     private Health playerHealth;
+    private CharacterAudio characterAudio;
 
     private bool facingRight = true;
     private float lastAttackTime = -99f;
@@ -29,6 +30,7 @@ public class EnemyController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        characterAudio = GetComponent<CharacterAudio>();
 
         if (isFlying)
             rb.gravityScale = 0f;
@@ -45,10 +47,22 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    // Durante un dialogo (o con Elian muerto) el enemigo se queda quieto
+    // y no ataca: el jugador no puede moverse ni defenderse.
+    private bool IsPaused =>
+        DialogueManager.IsDialogueActive ||
+        (playerHealth != null && playerHealth.IsDead);
+
     private void Update()
     {
         if (player == null)
             return;
+
+        if (IsPaused)
+        {
+            animator.SetFloat("Speed", 0f);
+            return;
+        }
 
         float detectionDistance = Vector2.Distance(
             transform.position,
@@ -71,7 +85,12 @@ public class EnemyController : MonoBehaviour
                 lastAttackTime = Time.time;
 
                 if (playerHealth != null && !playerHealth.IsDead)
+                {
+                    if (characterAudio != null)
+                        characterAudio.PlayAttack();
+
                     playerHealth.TakeDamage(attackDamage);
+                }
             }
         }
         else if (detectionDistance <= detectionRange)
@@ -100,7 +119,8 @@ public class EnemyController : MonoBehaviour
             player.position
         );
 
-        if (detectionDistance <= detectionRange &&
+        if (!IsPaused &&
+            detectionDistance <= detectionRange &&
             attackDistance > attackRange)
         {
             if (isFlying)
