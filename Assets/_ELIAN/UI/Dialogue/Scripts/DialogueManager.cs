@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -8,9 +9,13 @@ public class DialogueManager : MonoBehaviour
 {
     public enum Speaker
     {
+        // El orden importa: las escenas guardan el numero, no el nombre.
+        // Los nuevos hablantes se agregan siempre al final.
         Eco,
         Elian,
-        Sophia
+        Sophia,
+        Tadeo,     // Nivel 2 - Tecnico / Operario
+        Faber      // Nivel 2 - jefe
     }
 
     [Serializable]
@@ -28,14 +33,25 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TMP_Text speakerNameText;
     [SerializeField] private Image portraitImage;
 
-    [Header("Retratos")]
-    [SerializeField] private Sprite elianPortrait;
-    [SerializeField] private Sprite sophiaPortrait;
-    [SerializeField] private Sprite ecoPortrait;
+    [Header("Retratos animados")]
+    [Tooltip("Frames del retrato de Elian, en orden.")]
+    [SerializeField] private Sprite[] elianPortraitFrames;
+    [Tooltip("Frames del retrato de Eco, en orden.")]
+    [SerializeField] private Sprite[] ecoPortraitFrames;
+    [Tooltip("Frames del retrato de Sophia, en orden.")]
+    [SerializeField] private Sprite[] sophiaPortraitFrames;
+    [Tooltip("Frames del retrato de Tadeo (nivel 2), en orden.")]
+    [SerializeField] private Sprite[] tadeoPortraitFrames;
+    [Tooltip("Frames del retrato de FABER (nivel 2), en orden.")]
+    [SerializeField] private Sprite[] faberPortraitFrames;
+
+    [Tooltip("Cuadros por segundo de la animación de retrato (aplica a todos).")]
+    [SerializeField] private float portraitFrameRate = 8f;
 
     private DialogueLine[] currentLines;
     private int currentLine;
     private bool dialogueActive;
+    private int dialogueStartFrame = -1;
 
     private Action onDialogueFinished;
 
@@ -43,22 +59,53 @@ public class DialogueManager : MonoBehaviour
     private Rigidbody2D playerRb;
     private Animator playerAnimator;
 
+    private Coroutine portraitAnimCoroutine;
+
     private void Start()
     {
         if (dialoguePanel != null)
             dialoguePanel.SetActive(false);
     }
 
+    // Otros scripts (ej. PlayerHurt) lo consultan para no devolverle
+    // el control al jugador en mitad de un dialogo.
+    public static bool IsDialogueActive { get; private set; }
+
+    private void OnDisable()
+    {
+        // Si la escena se recarga con un dialogo abierto, que no quede trabado.
+        if (dialogueActive)
+            IsDialogueActive = false;
+    }
+
     private void Update()
     {
-        if (!dialogueActive)
+        if (!dialogueActive || PauseMenu.IsPaused)
             return;
 
-        if (Keyboard.current != null &&
-            Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
+        // Ignoramos el frame en que arranco el dialogo: si el jugador entro
+        // a la zona saltando, ese mismo Espacio se salteaba la primera linea.
+        if (Time.frameCount == dialogueStartFrame)
+            return;
+
+        if (AdvancePressedThisFrame())
             NextLine();
-        }
+    }
+
+    private static bool AdvancePressedThisFrame()
+    {
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard != null &&
+            (keyboard.spaceKey.wasPressedThisFrame ||
+             keyboard.enterKey.wasPressedThisFrame ||
+             keyboard.numpadEnterKey.wasPressedThisFrame))
+            return true;
+
+        Gamepad gamepad = Gamepad.current;
+        if (gamepad != null && gamepad.buttonSouth.wasPressedThisFrame)
+            return true;
+
+        return false;
     }
 
     public void StartDialogue(
@@ -71,6 +118,8 @@ public class DialogueManager : MonoBehaviour
         currentLines = lines;
         currentLine = 0;
         dialogueActive = true;
+        IsDialogueActive = true;
+        dialogueStartFrame = Time.frameCount;
         onDialogueFinished = onFinished;
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -120,23 +169,33 @@ public class DialogueManager : MonoBehaviour
     private void UpdateSpeaker(Speaker speaker)
     {
         string speakerName = "";
-        Sprite portrait = null;
+        Sprite[] frames = null;
 
         switch (speaker)
         {
             case Speaker.Eco:
                 speakerName = "ECO ESTUDIANTE";
-                portrait = ecoPortrait;
+                frames = ecoPortraitFrames;
                 break;
 
             case Speaker.Elian:
                 speakerName = "ELIAN";
-                portrait = elianPortrait;
+                frames = elianPortraitFrames;
                 break;
 
             case Speaker.Sophia:
                 speakerName = "SOPHIA";
-                portrait = sophiaPortrait;
+                frames = sophiaPortraitFrames;
+                break;
+
+            case Speaker.Tadeo:
+                speakerName = "TADEO";
+                frames = tadeoPortraitFrames;
+                break;
+
+            case Speaker.Faber:
+                speakerName = "FABER";
+                frames = faberPortraitFrames;
                 break;
         }
 
@@ -144,9 +203,47 @@ public class DialogueManager : MonoBehaviour
             speakerNameText.text = speakerName;
 
         if (portraitImage != null)
+            portraitImage.color = Color.white;
+
+        // Frenamos cualquier animación de retrato previa antes de arrancar la nueva.
+        StopPortraitAnimation();
+
+        if (portraitImage == null)
+            return;
+
+        if (frames != null && frames.Length > 0)
         {
-            portraitImage.sprite = portrait;
-            portraitImage.gameObject.SetActive(portrait != null);
+            portraitImage.gameObject.SetActive(true);
+            portraitAnimCoroutine = StartCoroutine(AnimatePortrait(frames));
+        }
+        else
+        {
+            // No hay frames asignados para este hablante: no mostramos nada
+            // en vez de arriesgarnos a mostrar un sprite viejo/incorrecto.
+            portraitImage.gameObject.SetActive(false);
+        }
+    }
+
+    private IEnumerator AnimatePortrait(Sprite[] frames)
+    {
+        int frameIndex = 0;
+        float frameDuration = 1f / Mathf.Max(portraitFrameRate, 0.01f);
+
+        while (true)
+        {
+            portraitImage.sprite = frames[frameIndex];
+            frameIndex = (frameIndex + 1) % frames.Length;
+
+            yield return new WaitForSeconds(frameDuration);
+        }
+    }
+
+    private void StopPortraitAnimation()
+    {
+        if (portraitAnimCoroutine != null)
+        {
+            StopCoroutine(portraitAnimCoroutine);
+            portraitAnimCoroutine = null;
         }
     }
 
@@ -166,14 +263,34 @@ public class DialogueManager : MonoBehaviour
     private void EndDialogue()
     {
         dialogueActive = false;
+        IsDialogueActive = false;
+
+        StopPortraitAnimation();
 
         if (dialoguePanel != null)
             dialoguePanel.SetActive(false);
 
-        if (playerController != null)
-            playerController.enabled = true;
+        StartCoroutine(ReturnControlNextFrame());
 
         onDialogueFinished?.Invoke();
         onDialogueFinished = null;
+    }
+
+    // La tecla que cierra el dialogo (Espacio) es la misma que la de salto.
+    // Esperamos un frame para que ese mismo "press" no haga saltar a Elian.
+    private IEnumerator ReturnControlNextFrame()
+    {
+        yield return null;
+
+        // Si en ese frame arranco otro dialogo encadenado, el jugador sigue congelado.
+        if (dialogueActive || playerController == null)
+            yield break;
+
+        // No revivir el control si Elian murio durante el dialogo.
+        Health playerHealth = playerController.GetComponent<Health>();
+        if (playerHealth != null && playerHealth.IsDead)
+            yield break;
+
+        playerController.enabled = true;
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Health))]
@@ -27,5 +28,6 @@ public class CentinelaHurt : MonoBehaviour
     {
         if (current <= 0) return;
         animator.SetTrigger("Hurt");
+        Sfx.PlayHurtFallback(this, Sfx.GolpeEnemigo);
     }
 }
