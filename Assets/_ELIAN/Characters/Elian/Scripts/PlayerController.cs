@@ -205,7 +205,7 @@ public class PlayerController : MonoBehaviour
             jumpRequested = true;
         }
 
-        if (controls.Player.Fire.IsPressed())
+        if (controls.Player.Fire.WasPressedThisFrame())
         {
             Shoot();
         }
