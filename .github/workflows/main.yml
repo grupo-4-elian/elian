@@ -1,4 +1,4 @@
-name: Actions 😎
+name: Compilar a GitHub Pages
 
 on: [
   workflow_dispatch
