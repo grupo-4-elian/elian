@@ -141,9 +141,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f415a82e96bb45142b41114e0462d18a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SophiaBullet
-  targetTravelTime: 5
-  minSpeed: 3
-  maxSpeed: 5
-  rotationSpeed: 90
+  targetTravelTime: 1.2
+  minSpeed: 4
+  maxSpeed: 7
+  rotationSpeed: 180
   damage: 1
   lifeTime: 8
